@@ -153,3 +153,5 @@ This module will use SemVer, and will stay on v0.X for the foreseeable future
 [helmfile]: https://github.com/roboll/helmfile
 [helm-diff]: https://github.com/databus23/helm-diff
 [go-task]: https://taskfile.dev/#/
+
+<!-- test -->
