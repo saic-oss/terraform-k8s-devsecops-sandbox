@@ -1,0 +1,96 @@
+{{- $gitlabHostName                := requiredEnv "GITLAB_GITLAB_HOST_NAME" }}
+{{- $registryHostName              := requiredEnv "GITLAB_REGISTRY_HOST_NAME" }}
+{{- $minioHostName                 := requiredEnv "GITLAB_MINIO_HOST_NAME" }}
+{{- $initialRootPasswordSecretName := requiredEnv "GITLAB_INITIAL_ROOT_PASSWORD_SECRET_NAME" }}
+{{- $initialRootPasswordSecretKey  := requiredEnv "GITLAB_INITIAL_ROOT_PASSWORD_SECRET_KEY" }}
+{{- $postgresqlFullNameOverride    := requiredEnv "POSTGRESQL_FULLNAME_OVERRIDE" }}
+{{- $postgresqlDatabaseName        := requiredEnv "POSTGRESQL_DATABASE_NAME" }}
+{{- $postgresqlUsername            := "postgres" }}
+{{- $postgresqlPasswordSecretKey   := "postgresql-password" }}
+{{- $postgresqlPort                := "5432" }}
+
+repositories:
+  - name: "gitlab"
+    url: "git+https://gitlab.com/gitlab-org/charts/gitlab@/?ref=d70eee5f2cf5449289862f4785c25f958aa07813" # Chart version 4.3.6
+
+missingFileHandler: Error
+
+releases:
+  - name: "gitlab"
+    namespace: "gitlab"
+    labels:
+      chart: "gitlab"
+      repo: "gitlab"
+      namespace: "gitlab"
+      vendor: "gitlab"
+    chart: "gitlab/gitlab"
+    version: "4.3.6"
+    wait: true
+    atomic: true
+    cleanupOnFail: true
+    timeout: 1200
+    values:
+      - global:
+          hosts:
+            gitlab:
+              name: {{ $gitlabHostName | quote }}
+              https: true
+            registry:
+              name: {{ $registryHostName | quote }}
+              https: true
+            minio:
+              name: {{ $minioHostName | quote }}
+              https: true
+          ingress:
+            configureCertmanager: false
+            enabled: false
+          initialRootPassword:
+            secret: {{ $initialRootPasswordSecretName | quote }}
+            key: {{ $initialRootPasswordSecretKey | quote }}
+          psql:
+            serviceName: {{ $postgresqlFullNameOverride | quote }}
+            port: {{ $postgresqlPort }}
+            database: {{ $postgresqlDatabaseName | quote }}
+            username: {{ $postgresqlUsername | quote }}
+            password:
+              useSecret: true
+              secret: {{ $postgresqlFullNameOverride | quote }}
+              key: {{ $postgresqlPasswordSecretKey | quote }}
+          grafana:
+            enabled: false
+          appConfig:
+            enableUsagePing: false
+            enableImpersonation: true
+            defaultCanCreateGroup: false
+            usernameChangingEnabled: false
+            defaultProjectsFeatures:
+              issues: true
+              mergeRequests: true
+              wiki: false
+              snippets: false
+              builds: false
+              containerRegistry: false
+            cron_jobs:
+              stuck_ci_jobs_worker:
+                cron: "0 * * * *"
+              expire_build_artifacts_worker:
+                cron: "50 * * * *"
+              repository_archive_cache_worker:
+                cron: "0 * * * *"
+        certmanager:
+          install: false
+        nginx-ingress:
+          enabled: false
+        prometheus:
+          install: false
+        postgresql:
+          install: false
+        gitlab-runner:
+          install: false
+        registry:
+          ingress:
+            enabled: false
+        gitlab:
+          webservice:
+            ingress:
+              enabled: false

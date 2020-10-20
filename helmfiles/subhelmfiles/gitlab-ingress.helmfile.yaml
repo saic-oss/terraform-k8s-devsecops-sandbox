@@ -1,0 +1,115 @@
+{{- $clusterIssuer := requiredEnv "CLUSTER_ISSUER" }}
+{{- $gitlabHostName := requiredEnv "GITLAB_GITLAB_HOST_NAME" }}
+{{- $registryHostName := requiredEnv "GITLAB_REGISTRY_HOST_NAME" }}
+{{- $minioHostName := requiredEnv "GITLAB_MINIO_HOST_NAME" }}
+
+{{- if gt (len $gitlabHostName) 63 }}
+  {{- fail "GITLAB_GITLAB_HOST_NAME may not exceed 63 characters" }}
+{{- end }}
+{{- if gt (len $registryHostName) 63 }}
+  {{- fail "GITLAB_REGISTRY_HOST_NAME may not exceed 63 characters" }}
+{{- end }}
+{{- if gt (len $minioHostName) 63 }}
+  {{- fail "GITLAB_MINIO_HOST_NAME may not exceed 63 characters" }}
+{{- end }}
+
+repositories:
+  - name: incubator
+    url: https://kubernetes-charts-incubator.storage.googleapis.com
+
+missingFileHandler: Error
+
+releases:
+  - name: "gitlab-ingress"
+    namespace: "gitlab"
+    labels:
+      chart: "raw"
+      repo: "incubator"
+      namespace: "gitlab"
+      vendor: "helm"
+    chart: "incubator/raw"
+    version: "0.2.3"
+    wait: true
+    atomic: true
+    cleanupOnFail: true
+    values:
+      - resources:
+          - apiVersion: extensions/v1beta1
+            kind: Ingress
+            metadata:
+              annotations:
+                cert-manager.io/cluster-issuer: {{ $clusterIssuer | quote }}
+                kubernetes.io/ingress.class: "nginx"
+                kubernetes.io/ingress.provider: "nginx"
+                nginx.ingress.kubernetes.io/proxy-body-size: "512m"
+                nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+                nginx.ingress.kubernetes.io/proxy-connect-timeout: "15"
+              name: gitlab-webservice
+            spec:
+              rules:
+                - host: {{ $gitlabHostName | quote }}
+                  http:
+                    paths:
+                      - path: /
+                        backend:
+                          serviceName: gitlab-webservice
+                          servicePort: 8181
+                      - path: /admin/sidekiq
+                        backend:
+                          serviceName: gitlab-webservice
+                          servicePort: 8080
+              tls:
+                - hosts:
+                    - {{ $gitlabHostName | quote }}
+                  secretName: gitlab-webservice-cert
+          - apiVersion: extensions/v1beta1
+            kind: Ingress
+            metadata:
+              annotations:
+                cert-manager.io/cluster-issuer: {{ $clusterIssuer | quote }}
+                kubernetes.io/ingress.class: "nginx"
+                kubernetes.io/ingress.provider: "nginx"
+                nginx.ingress.kubernetes.io/proxy-body-size: "0"
+                nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
+                nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+                nginx.ingress.kubernetes.io/proxy-buffering: "off"
+
+              name: gitlab-registry
+            spec:
+              rules:
+                - host: {{ $registryHostName | quote }}
+                  http:
+                    paths:
+                      - path: /
+                        backend:
+                          serviceName: gitlab-registry
+                          servicePort: 5000
+              tls:
+                - hosts:
+                    - {{ $registryHostName | quote }}
+                  secretName: gitlab-registry-cert
+          - apiVersion: extensions/v1beta1
+            kind: Ingress
+            metadata:
+              annotations:
+                cert-manager.io/cluster-issuer: {{ $clusterIssuer | quote }}
+                kubernetes.io/ingress.class: "nginx"
+                kubernetes.io/ingress.provider: "nginx"
+                nginx.ingress.kubernetes.io/proxy-body-size: "0"
+                nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
+                nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+                nginx.ingress.kubernetes.io/proxy-buffering: "off"
+              name: gitlab-minio
+            spec:
+              rules:
+                - host: {{ $minioHostName | quote }}
+                  http:
+                    paths:
+                      - path: /
+                        backend:
+                          serviceName: gitlab-minio-svc
+                          servicePort: 9000
+              tls:
+                - hosts:
+                    - {{ $minioHostName | quote }}
+                  secretName: gitlab-minio-cert
