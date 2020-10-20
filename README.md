@@ -36,7 +36,7 @@ The purpose of this module is to deploy a DevSecOps "sandbox" to a kubernetes cl
 
 The complete example requires 2 terraform applies due to dependency issues with the subnets being generated. For convenience, a Taskfile has been provided, to be used with [go-task][go-task]
 
-```
+```sh
 task applyExample
 task destroyExample
 ```
