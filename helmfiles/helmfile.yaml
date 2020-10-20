@@ -1,0 +1,7 @@
+helmfiles:
+  - path: "subhelmfiles/gitlab-postgresql.helmfile.yaml"
+  - path: "subhelmfiles/gitlab-secrets.helmfile.yaml"
+  - path: "subhelmfiles/gitlab.helmfile.yaml"
+  - path: "subhelmfiles/gitlab-ingress.helmfile.yaml"
+
+missingFileHandler: Error

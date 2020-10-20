@@ -1,0 +1,34 @@
+repositories:
+  - name: "bitnami"
+    url: "https://charts.bitnami.com/bitnami"
+
+missingFileHandler: Error
+
+releases:
+  - name: "gitlab-postgresql"
+    namespace: "gitlab"
+    labels:
+      chart: "postgresql"
+      repo: "bitnami"
+      namespace: "gitlab"
+      vendor: "bitnami"
+    chart: "bitnami/postgresql"
+    version: "9.5.0"
+    wait: true
+    atomic: true
+    cleanupOnFail: true
+    values:
+      - fullnameOverride: {{ requiredEnv "POSTGRESQL_FULLNAME_OVERRIDE" | quote }}
+        postgresqlPostgresPassword: {{ requiredEnv "POSTGRESQL_POSTGRES_PASSWORD" | quote }}
+        postgresqlDatabase: {{ requiredEnv "POSTGRESQL_DATABASE_NAME" | quote }}
+        postgresqlPassword: {{ requiredEnv "POSTGRESQL_POSTGRES_PASSWORD" | quote }}
+        persistence:
+          enabled: true
+          storageClass: "efs"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "250Mi"
+          limits:
+            cpu: "10"
+            memory: "1Gi"
