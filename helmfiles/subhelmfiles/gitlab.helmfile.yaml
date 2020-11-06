@@ -11,7 +11,7 @@
 
 repositories:
   - name: "gitlab"
-    url: "git+https://gitlab.com/gitlab-org/charts/gitlab@/?ref=d70eee5f2cf5449289862f4785c25f958aa07813&sparse=0" # Chart version 4.3.6
+    url: "https://charts.gitlab.io"
 
 missingFileHandler: Error
 
@@ -24,7 +24,7 @@ releases:
       namespace: "gitlab"
       vendor: "gitlab"
     chart: "gitlab/gitlab"
-    version: "4.3.6"
+    version: "4.5.3"
     wait: true
     atomic: true
     cleanupOnFail: true
