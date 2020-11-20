@@ -132,6 +132,8 @@ module "k8s-devsecops-sandbox" {
   hosted_zone_id           = var.hosted_zone_id
   elb_dns_name             = module.rancher-k8s-cluster.elb_dns_name
   elb_zone_id              = module.rancher-k8s-cluster.elb_zone_id
+  jenkins_admin_email      = var.jenkins_admin_email
+  jenkins_host_name        = "jenkins.${random_pet.default.id}.${var.hosted_zone_domain_name}"
   depends_on = [
     module.rancher-k8s-cluster
   ]
