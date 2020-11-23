@@ -1,0 +1,101 @@
+{{- $jenkinsHostName := requiredEnv "JENKINS_HOST_NAME" }}
+{{- $jenkinsAdminEmail := requiredEnv "JENKINS_ADMIN_EMAIL" }}
+{{- $initialAdminCredsSecretName := requiredEnv "JENKINS_INITIAL_ADMIN_CREDS_SECRET_NAME" }}
+{{- $initialAdminCredsUserKey := requiredEnv "JENKINS_INITIAL_ADMIN_CREDS_USER_KEY" }}
+{{- $initialAdminCredsPasswordKey := requiredEnv "JENKINS_INITIAL_ADMIN_CREDS_PASSWORD_KEY" }}
+{{- $clusterIssuer := requiredEnv "CLUSTER_ISSUER" }}
+
+repositories:
+  - name: "jenkins"
+    url: "https://charts.jenkins.io"
+
+missingFileHandler: Error
+
+releases:
+  - name: "jenkins"
+    namespace: "jenkins"
+    labels:
+      chart: "jenkins"
+      repo: "jenkins"
+      namespace: "jenkins"
+      vendor: "jenkins"
+    chart: "jenkins/jenkins"
+    version: "2.17.1"
+    wait: true
+    atomic: true
+    cleanupOnFail: true
+    timeout: 1200
+    values:
+      - master:
+          image: "jenkins/jenkins"
+          tag: "2.249.3-lts-centos7"
+          imagePullPolicy: "IfNotPresent"
+          admin:
+            existingSecret: {{$initialAdminCredsSecretName | quote}}
+            userKey: {{$initialAdminCredsUserKey | quote}}
+            passwordKey: {{$initialAdminCredsPasswordKey | quote}}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "256Mi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          jenkinsUrl: "https://{{$jenkinsHostName}}"
+          jenkinsAdminEmail: {{$jenkinsAdminEmail | quote}}
+          installPlugins:
+            - kubernetes:1.25.7
+            - workflow-job:2.40
+            - workflow-aggregator:2.6
+            - credentials-binding:1.24
+            - git:4.2.2
+            - configuration-as-code:1.43
+          additionalPlugins:
+            - antisamy-markup-formatter:2.1
+          initializeOnce: true
+          overwritePlugins: true
+          enableRawHtmlMarkupFormatter: true
+#          scriptApproval:
+#            - "method java.util.Base64$Decoder decode java.lang.String"
+#            - "new java.lang.String byte[]"
+#            - "staticMethod java.util.Base64 getDecoder"
+          JCasC:
+            enabled: true
+            defaultConfig: true
+            configScripts:
+              welcome-message: |
+                jenkins:
+                  systemMessage: "Ephemeral Virtual Training Range (EVTR)"
+            securityRealm: |-
+              legacy
+            authorizationStrategy: |-
+              loggedInUsersCanDoAnything:
+                allowAnonymousRead: false
+          sidecars:
+            configAutoReload:
+              enabled: true
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 50Mi
+                limits:
+                  cpu: 100m
+                  memory: 100Mi
+          ingress:
+            enabled: true
+            paths: []
+            apiVersion: "networking.k8s.io/v1beta1"
+            labels: {}
+            annotations:
+              cert-manager.io/cluster-issuer: {{$clusterIssuer | quote}}
+              kubernetes.io/ingress.class: "nginx"
+              kubernetes.io/ingress.provider: "nginx"
+            hostName: {{$jenkinsHostName | quote}}
+            tls:
+              - secretName: "tls-{{$jenkinsHostName}}"
+                hosts:
+                  - {{$jenkinsHostName | quote}}
+          healthProbeLivenessInitialDelay: 180
+        persistence:
+          enabled: true
+          storageClass: efs

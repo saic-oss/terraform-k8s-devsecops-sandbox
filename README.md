@@ -131,6 +131,8 @@ This module will use SemVer, and will stay on v0.X for the foreseeable future
 | elb\_zone\_id | Zone ID of the ELB that points at the cluster | `string` | n/a | yes |
 | gitlab\_host\_name | FQDN of desired GitLab endpoint e.g. gitlab.example.com. Max length 63 chars | `string` | n/a | yes |
 | hosted\_zone\_id | ID of the Hosted Zone to create Route53 Records in | `string` | n/a | yes |
+| jenkins\_admin\_email | email address of the Jenkins admin | `string` | n/a | yes |
+| jenkins\_host\_name | FQDN of desired Jenkins endpoint e.g. jenkins.example.com. Max length 63 chars | `string` | n/a | yes |
 | kubeconfig\_file\_contents | Contents of kubeconfig file to use to connect to the cluster | `string` | n/a | yes |
 | minio\_host\_name | FQDN of desired GitLab Minio endpoint e.g. minio.gitlab.example.com. Max length 63 chars | `string` | n/a | yes |
 | registry\_host\_name | FQDN of desired GitLab Registry endpoint e.g. registry.gitlab.example.com. Max length 63 chars | `string` | n/a | yes |
@@ -144,6 +146,8 @@ This module will use SemVer, and will stay on v0.X for the foreseeable future
 | gitlab\_registry\_endpoint | Endpoint for GitLab Registry |
 | gitlab\_root\_password | Password for the 'root' user in GitLab |
 | gitlab\_root\_user\_personal\_access\_token | Personal Access Token for the GitLab root user |
+| jenkins\_admin\_password | Password for the 'admin' user in Jenkins |
+| jenkins\_endpoint | Endpoint for Jenkins |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- prettier-ignore-end -->

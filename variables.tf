@@ -18,6 +18,11 @@ variable "minio_host_name" {
   description = "FQDN of desired GitLab Minio endpoint e.g. minio.gitlab.example.com. Max length 63 chars"
 }
 
+variable "jenkins_host_name" {
+  type        = string
+  description = "FQDN of desired Jenkins endpoint e.g. jenkins.example.com. Max length 63 chars"
+}
+
 variable "cluster_issuer" {
   type        = string
   description = "Name of Cert Manager ClusterIssuer to use"
@@ -36,4 +41,9 @@ variable "elb_dns_name" {
 variable "elb_zone_id" {
   type        = string
   description = "Zone ID of the ELB that points at the cluster"
+}
+
+variable "jenkins_admin_email" {
+  type        = string
+  description = "email address of the Jenkins admin"
 }

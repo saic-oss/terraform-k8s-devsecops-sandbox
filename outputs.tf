@@ -24,3 +24,14 @@ output "gitlab_root_user_personal_access_token" {
   value       = random_password.gitlab_root_user_personal_access_token.result
   sensitive   = true
 }
+
+output "jenkins_endpoint" {
+  description = "Endpoint for Jenkins"
+  value       = "https://${var.jenkins_host_name}"
+}
+
+output "jenkins_admin_password" {
+  description = "Password for the 'admin' user in Jenkins"
+  value       = random_password.jenkins_initial_admin_password.result
+  sensitive   = true
+}
