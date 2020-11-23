@@ -71,6 +71,7 @@ resource "null_resource" "helmfile_deployments" {
   }
   depends_on = [
     aws_route53_record.gitlab,
+    aws_route53_record.jenkins,
     aws_route53_record.registry,
     aws_route53_record.minio
   ]
