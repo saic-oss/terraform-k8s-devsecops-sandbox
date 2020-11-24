@@ -1,4 +1,8 @@
+{{- $gitlabHostName := requiredEnv "GITLAB_GITLAB_HOST_NAME" }}
+{{- $gitlabApiToken := requiredEnv "GITLAB_API_TOKEN" }}
 {{- $jenkinsHostName := requiredEnv "JENKINS_HOST_NAME" }}
+{{- $jenkinsId := requiredEnv "JENKINS_ID" }}
+{{- $jenkinsSecret := requiredEnv "JENKINS_SECRET" }}
 {{- $jenkinsAdminEmail := requiredEnv "JENKINS_ADMIN_EMAIL" }}
 {{- $initialAdminCredsSecretName := requiredEnv "JENKINS_INITIAL_ADMIN_CREDS_SECRET_NAME" }}
 {{- $initialAdminCredsUserKey := requiredEnv "JENKINS_INITIAL_ADMIN_CREDS_USER_KEY" }}
@@ -69,15 +73,69 @@ releases:
               welcome-message: |
                 jenkins:
                   systemMessage: "Ephemeral Virtual Training Range (EVTR)"
+              credentials: |
+                credentials:
+                  system:
+                    domainCredentials:
+                      - credentials:
+                          - gitLabApiTokenImpl:
+                              scope: SYSTEM
+                              id: gitlab_token
+                              apiToken: "{{$gitlabApiToken}}"
+                              description: "Gitlab Token"
+              gitlab: |
+                unclassified:
+                  gitlabconnectionconfig:
+                    connections:
+                      - apiTokenId: gitlab_token
+                        clientBuilderId: "autodetect"
+                        connectionTimeout: 20
+                        ignoreCertificateErrors: true
+                        name: "{{$gitlabHostName}}"
+                        readTimeout: 10
+                        url: "https://{{$gitlabHostName}}"
             securityRealm:
               gitLab:
-                clientID: ""
-                clientSecret: ""
-                gitlabApiUri: "https://code.saicinnovationfactory.com"
-                gitlabWebUri: "https://code.saicinnovationfactory.com"
-            authorizationStrategy: |-
-              loggedInUsersCanDoAnything:
-                allowAnonymousRead: false
+                clientID: "{{$jenkinsId}}"
+                clientSecret: "{{$jenkinsSecret}}"
+                gitlabApiUri: "https://{{$gitlabHostName}}"
+                gitlabWebUri: "https://{{$gitlabHostName}}"
+            authorizationStrategy:
+              projectMatrix:
+                permissions:
+                - "Agent/Build:root"
+                - "Agent/Configure:root"
+                - "Agent/Connect:root"
+                - "Agent/Create:root"
+                - "Agent/Delete:root"
+                - "Agent/Disconnect:root"
+                - "Credentials/Create:root"
+                - "Credentials/Delete:root"
+                - "Credentials/ManageDomains:root"
+                - "Credentials/Update:root"
+                - "Credentials/View:root"
+                - "Job/Build:root"
+                - "Job/Cancel:root"
+                - "Job/Configure:root"
+                - "Job/Create:root"
+                - "Job/Delete:root"
+                - "Job/Discover:root"
+                - "Job/Move:root"
+                - "Job/Read:root"
+                - "Job/Workspace:root"
+                - "Lockable Resources/Reserve:root"
+                - "Lockable Resources/Unlock:root"
+                - "Overall/Administer:root"
+                - "Overall/Read:root"
+                - "Overall/Read:authenticated"
+                - "Run/Delete:root"
+                - "Run/Replay:root"
+                - "Run/Update:root"
+                - "SCM/Tag:root"
+                - "View/Configure:root"
+                - "View/Create:root"
+                - "View/Delete:root"
+                - "View/Read:root"
           sidecars:
             configAutoReload:
               enabled: true

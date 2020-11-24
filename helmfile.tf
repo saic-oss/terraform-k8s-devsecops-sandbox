@@ -50,6 +50,7 @@ resource "null_resource" "helmfile_deployments" {
     command = "helmfile -f ${path.module}/helmfiles/helmfile.yaml apply"
     environment = {
       CLUSTER_ISSUER                             = var.cluster_issuer
+      GITLAB_API_TOKEN                           = random_password.gitlab_api_token.result
       GITLAB_GITLAB_HOST_NAME                    = var.gitlab_host_name
       GITLAB_REGISTRY_HOST_NAME                  = var.registry_host_name
       GITLAB_MINIO_HOST_NAME                     = var.minio_host_name
@@ -67,6 +68,8 @@ resource "null_resource" "helmfile_deployments" {
       JENKINS_INITIAL_ADMIN_CREDS_USER_VALUE     = "admin"
       JENKINS_INITIAL_ADMIN_CREDS_PASSWORD_KEY   = "jenkins-admin-password"
       JENKINS_INITIAL_ADMIN_CREDS_PASSWORD_VALUE = random_password.jenkins_initial_admin_password.result
+      JENKINS_SECRET                             = random_password.jenkins_secret.result
+      JENKINS_ID                                 = random_password.jenkins_id.result
     }
   }
   depends_on = [
