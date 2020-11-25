@@ -9,39 +9,6 @@ resource "random_password" "gitlab_root_user_personal_access_token" {
   special     = false
 }
 
-resource "random_password" "gitlab_api_token" {
-  length      = 20
-  upper       = true
-  min_upper   = 1
-  lower       = true
-  min_lower   = 1
-  number      = true
-  min_numeric = 1
-  special     = false
-}
-
-resource "random_password" "jenkins_secret" {
-  length      = 20
-  upper       = true
-  min_upper   = 1
-  lower       = true
-  min_lower   = 1
-  number      = true
-  min_numeric = 1
-  special     = false
-}
-
-resource "random_password" "jenkins_id" {
-  length      = 20
-  upper       = true
-  min_upper   = 1
-  lower       = true
-  min_lower   = 1
-  number      = true
-  min_numeric = 1
-  special     = false
-}
-
 // Idempotently create a PAT for the root user in GitLab
 resource "null_resource" "set_gitlab_personal_access_token" {
   triggers = {

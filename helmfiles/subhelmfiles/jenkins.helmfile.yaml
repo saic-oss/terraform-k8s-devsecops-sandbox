@@ -94,48 +94,18 @@ releases:
                         name: "{{$gitlabHostName}}"
                         readTimeout: 10
                         url: "https://{{$gitlabHostName}}"
-            securityRealm:
+            securityRealm: |
               gitLab:
                 clientID: "{{$jenkinsId}}"
                 clientSecret: "{{$jenkinsSecret}}"
                 gitlabApiUri: "https://{{$gitlabHostName}}"
                 gitlabWebUri: "https://{{$gitlabHostName}}"
-            authorizationStrategy:
-              projectMatrix:
-                permissions:
-                - "Agent/Build:root"
-                - "Agent/Configure:root"
-                - "Agent/Connect:root"
-                - "Agent/Create:root"
-                - "Agent/Delete:root"
-                - "Agent/Disconnect:root"
-                - "Credentials/Create:root"
-                - "Credentials/Delete:root"
-                - "Credentials/ManageDomains:root"
-                - "Credentials/Update:root"
-                - "Credentials/View:root"
-                - "Job/Build:root"
-                - "Job/Cancel:root"
-                - "Job/Configure:root"
-                - "Job/Create:root"
-                - "Job/Delete:root"
-                - "Job/Discover:root"
-                - "Job/Move:root"
-                - "Job/Read:root"
-                - "Job/Workspace:root"
-                - "Lockable Resources/Reserve:root"
-                - "Lockable Resources/Unlock:root"
-                - "Overall/Administer:root"
-                - "Overall/Read:root"
-                - "Overall/Read:authenticated"
-                - "Run/Delete:root"
-                - "Run/Replay:root"
-                - "Run/Update:root"
-                - "SCM/Tag:root"
-                - "View/Configure:root"
-                - "View/Create:root"
-                - "View/Delete:root"
-                - "View/Read:root"
+            authorizationStrategy: |
+              globalMatrix:
+                grantedPermissions:
+                  permissions:
+                    - "Overall/Read:authenticated"
+                    - "Overall/Administer:admin"
           sidecars:
             configAutoReload:
               enabled: true
