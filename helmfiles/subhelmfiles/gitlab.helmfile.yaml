@@ -28,7 +28,7 @@ releases:
     wait: true
     atomic: true
     cleanupOnFail: true
-    timeout: 1200
+    timeout: 2400
     values:
       - global:
           hosts:
