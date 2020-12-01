@@ -63,3 +63,9 @@ output "gitlab_root_user_personal_access_token" {
   value       = module.k8s-devsecops-sandbox.gitlab_root_user_personal_access_token
   sensitive   = true
 }
+
+output "jenkins_admin_password" {
+  description = "Password for the 'admin' user in Jenkins"
+  value       = module.k8s-devsecops-sandbox.jenkins_admin_password
+  sensitive   = true
+}
