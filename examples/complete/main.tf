@@ -93,7 +93,7 @@ module "rke_rancher_master_cluster" {
 }
 
 module "rancher-k8s-cluster" {
-  source                     = "git::https://github.com/saic-oss/terraform-aws-rancher-k8s-cluster.git?ref=tags/0.4.2"
+  source                     = "git::https://github.com/saic-oss/terraform-aws-rancher-k8s-cluster.git?ref=tags/0.4.4"
   additional_tag_map         = {}
   kubernetes_version         = var.worker_cluster_kubernetes_version
   name                       = "${var.name}-workload"
