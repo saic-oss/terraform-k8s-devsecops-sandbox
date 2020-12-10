@@ -107,7 +107,6 @@ releases:
             authorizationStrategy: |-
               projectMatrix:
                 permissions:
-                - "Overall/Read:anonymous"
                 - "Overall/Administer:authenticated"
                 - "Overall/Read:authenticated"
           sidecars:

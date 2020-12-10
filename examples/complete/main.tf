@@ -62,7 +62,7 @@ module "subnets" {
 }
 
 module "rke_rancher_master_cluster" {
-  source                          = "git::https://github.com/saic-oss/terraform-aws-rke-rancher-master-cluster.git?ref=tags/0.3.1"
+  source                          = "git::https://github.com/saic-oss/terraform-aws-rke-rancher-master-cluster.git?ref=tags/0.3.3"
   additional_tag_map              = {}
   instance_type                   = var.controlplane_instance_type
   kubernetes_version              = var.master_cluster_kubernetes_version
@@ -93,7 +93,7 @@ module "rke_rancher_master_cluster" {
 }
 
 module "rancher-k8s-cluster" {
-  source                     = "git::https://github.com/saic-oss/terraform-aws-rancher-k8s-cluster.git?ref=tags/0.4.4"
+  source                     = "git::https://github.com/saic-oss/terraform-aws-rancher-k8s-cluster.git?ref=tags/0.4.5"
   additional_tag_map         = {}
   kubernetes_version         = var.worker_cluster_kubernetes_version
   name                       = "${var.name}-workload"
