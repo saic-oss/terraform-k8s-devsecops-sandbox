@@ -14,7 +14,9 @@ The purpose of this module is to deploy a DevSecOps "sandbox" to a kubernetes cl
 
 - [x] Deploys GitLab using Helmfile
 - [x] Applies GitLab configuration
-- [x] Creates Route53 records for GitLab, Minio, and Registry
+- [x] Deploys Jenkins using Helmfile
+- [x] Applies Jenkins configuration
+- [x] Creates Route53 records for GitLab, Jenkins, Minio, and Registry
 - [x] Configures the root password and provides it as an output
 - [x] Creates a Personal Access Token for the root user and provides it as an output
 
