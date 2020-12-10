@@ -51,7 +51,7 @@ resource "null_resource" "set_api_token_for_jenkins" {
     uuid = uuid()
   }
   provisioner "local-exec" {
-    command = "kubectl exec -n gitlab -c task-runner $(kubectl get pod -n gitlab -l \"app=task-runner\" -o jsonpath='{.items[0].metadata.name}') -- gitlab-rails runner 'user = User.find_by_username(\"'\"$GITLAB_USER\"'\"); tokens = user.personal_access_tokens; token = tokens.find_by(name: \"'\"$TOKEN_NAME\"'\"); token = user.personal_access_tokens.create(scopes: [:api, :sudo], name: \"'\"$TOKEN_NAME\"'\") unless token.present?; token.set_token(\"'\"$TOKEN_VALUE\"'\"); token.save!'"
+    command = "kubectl exec -n gitlab -c task-runner $(kubectl get pod -n gitlab -l \"app=task-runner\" -o jsonpath='{.items[0].metadata.name}') -- gitlab-rails runner 'user = User.find_by_username(\"'\"$GITLAB_USER\"'\"); tokens = user.personal_access_tokens; token = tokens.find_by(name: \"'\"$TOKEN_NAME\"'\"); token = user.personal_access_tokens.create(scopes: [:api], name: \"'\"$TOKEN_NAME\"'\") unless token.present?; token.set_token(\"'\"$TOKEN_VALUE\"'\"); token.save!'"
     environment = {
       GITLAB_USER = "root"
       KUBECONFIG  = abspath(local_file.kubeconfig.filename)
