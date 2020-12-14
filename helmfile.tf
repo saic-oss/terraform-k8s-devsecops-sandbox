@@ -42,6 +42,28 @@ resource "random_password" "jenkins_initial_admin_password" {
   override_special = "_%@"
 }
 
+resource "random_password" "jenkins_id" {
+  length      = 20
+  upper       = true
+  min_upper   = 1
+  lower       = true
+  min_lower   = 1
+  number      = true
+  min_numeric = 1
+  special     = false
+}
+
+resource "random_password" "jenkins_secret" {
+  length      = 20
+  upper       = true
+  min_upper   = 1
+  lower       = true
+  min_lower   = 1
+  number      = true
+  min_numeric = 1
+  special     = false
+}
+
 resource "null_resource" "helmfile_deployments" {
   triggers = {
     uuid = uuid()
@@ -50,6 +72,7 @@ resource "null_resource" "helmfile_deployments" {
     command = "helmfile -f ${path.module}/helmfiles/helmfile.yaml apply"
     environment = {
       CLUSTER_ISSUER                             = var.cluster_issuer
+      GITLAB_API_TOKEN                           = random_password.gitlab_root_user_personal_access_token.result
       GITLAB_GITLAB_HOST_NAME                    = var.gitlab_host_name
       GITLAB_REGISTRY_HOST_NAME                  = var.registry_host_name
       GITLAB_MINIO_HOST_NAME                     = var.minio_host_name
@@ -67,10 +90,13 @@ resource "null_resource" "helmfile_deployments" {
       JENKINS_INITIAL_ADMIN_CREDS_USER_VALUE     = "admin"
       JENKINS_INITIAL_ADMIN_CREDS_PASSWORD_KEY   = "jenkins-admin-password"
       JENKINS_INITIAL_ADMIN_CREDS_PASSWORD_VALUE = random_password.jenkins_initial_admin_password.result
+      JENKINS_SECRET                             = random_password.jenkins_secret.result
+      JENKINS_ID                                 = random_password.jenkins_id.result
     }
   }
   depends_on = [
     aws_route53_record.gitlab,
+    aws_route53_record.jenkins,
     aws_route53_record.registry,
     aws_route53_record.minio
   ]

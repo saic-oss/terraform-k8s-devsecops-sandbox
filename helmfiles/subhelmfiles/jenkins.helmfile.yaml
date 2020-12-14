@@ -1,4 +1,8 @@
+{{- $gitlabHostName := requiredEnv "GITLAB_GITLAB_HOST_NAME" }}
+{{- $gitlabApiToken := requiredEnv "GITLAB_API_TOKEN" }}
 {{- $jenkinsHostName := requiredEnv "JENKINS_HOST_NAME" }}
+{{- $jenkinsId := requiredEnv "JENKINS_ID" }}
+{{- $jenkinsSecret := requiredEnv "JENKINS_SECRET" }}
 {{- $jenkinsAdminEmail := requiredEnv "JENKINS_ADMIN_EMAIL" }}
 {{- $initialAdminCredsSecretName := requiredEnv "JENKINS_INITIAL_ADMIN_CREDS_SECRET_NAME" }}
 {{- $initialAdminCredsUserKey := requiredEnv "JENKINS_INITIAL_ADMIN_CREDS_USER_KEY" }}
@@ -45,11 +49,18 @@ releases:
           jenkinsAdminEmail: {{$jenkinsAdminEmail | quote}}
           installPlugins:
             - kubernetes:1.25.7
+            - ace-editor:1.1
             - workflow-job:2.40
             - workflow-aggregator:2.6
+            - workflow-cps-global-lib:2.17
+            - pipeline-stage-view:2.19
             - credentials-binding:1.24
-            - git:4.2.2
-            - configuration-as-code:1.43
+            - font-awesome-api:5.15.1-1
+            - git:4.5.0
+            - gitlab-oauth:1.10
+            - gitlab-plugin:1.5.13
+            - matrix-auth:2.6.4
+            - configuration-as-code:1.46
           additionalPlugins:
             - antisamy-markup-formatter:2.1
           initializeOnce: true
@@ -66,11 +77,38 @@ releases:
               welcome-message: |
                 jenkins:
                   systemMessage: "Ephemeral Virtual Training Range (EVTR)"
+              credentials: |
+                credentials:
+                  system:
+                    domainCredentials:
+                      - credentials:
+                          - gitLabApiTokenImpl:
+                              scope: SYSTEM
+                              id: gitlab_token
+                              apiToken: "{{$gitlabApiToken}}"
+                              description: "Gitlab Token"
+              gitlab: |
+                unclassified:
+                  gitlabconnectionconfig:
+                    connections:
+                      - apiTokenId: gitlab_token
+                        clientBuilderId: "autodetect"
+                        connectionTimeout: 20
+                        ignoreCertificateErrors: true
+                        name: "{{$gitlabHostName}}"
+                        readTimeout: 10
+                        url: "https://{{$gitlabHostName}}"
             securityRealm: |-
-              legacy
+              gitLab:
+                clientID: "{{$jenkinsId}}"
+                clientSecret: "{{$jenkinsSecret}}"
+                gitlabApiUri: "https://{{$gitlabHostName}}"
+                gitlabWebUri: "https://{{$gitlabHostName}}"
             authorizationStrategy: |-
-              loggedInUsersCanDoAnything:
-                allowAnonymousRead: false
+              projectMatrix:
+                permissions:
+                - "Overall/Administer:root"
+                - "Overall/Read:authenticated"
           sidecars:
             configAutoReload:
               enabled: true
