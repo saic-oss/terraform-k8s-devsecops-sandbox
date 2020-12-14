@@ -29,17 +29,6 @@ resource "random_password" "gitlab_initial_root_password" {
   override_special = "_%@"
 }
 
-resource "random_password" "gitlab_api_token" {
-  length      = 20
-  upper       = true
-  min_upper   = 1
-  lower       = true
-  min_lower   = 1
-  number      = true
-  min_numeric = 1
-  special     = false
-}
-
 resource "random_password" "jenkins_initial_admin_password" {
   length           = 16
   upper            = true
@@ -83,7 +72,7 @@ resource "null_resource" "helmfile_deployments" {
     command = "helmfile -f ${path.module}/helmfiles/helmfile.yaml apply"
     environment = {
       CLUSTER_ISSUER                             = var.cluster_issuer
-      GITLAB_API_TOKEN                           = random_password.gitlab_api_token.result
+      GITLAB_API_TOKEN                           = random_password.gitlab_root_user_personal_access_token.result
       GITLAB_GITLAB_HOST_NAME                    = var.gitlab_host_name
       GITLAB_REGISTRY_HOST_NAME                  = var.registry_host_name
       GITLAB_MINIO_HOST_NAME                     = var.minio_host_name
