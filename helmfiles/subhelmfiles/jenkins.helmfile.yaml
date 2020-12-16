@@ -87,6 +87,11 @@ releases:
                               id: gitlab_token
                               apiToken: "{{$gitlabApiToken}}"
                               description: "Gitlab Token"
+                          - usernamePassword:
+                              scope: GLOBAL
+                              id: gitlab_credentials
+                              username: root
+                              password: "{{$gitlabApiToken}}"
               gitlab: |
                 unclassified:
                   gitlabconnectionconfig:
