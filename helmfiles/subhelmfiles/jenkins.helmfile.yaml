@@ -100,7 +100,7 @@ releases:
                         clientBuilderId: "autodetect"
                         connectionTimeout: 20
                         ignoreCertificateErrors: true
-                        name: "{{$gitlabHostName}}"
+                        name: "gitlab"
                         readTimeout: 10
                         url: "https://{{$gitlabHostName}}"
             securityRealm: |-
