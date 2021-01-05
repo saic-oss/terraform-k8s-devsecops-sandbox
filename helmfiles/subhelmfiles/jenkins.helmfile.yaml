@@ -56,7 +56,7 @@ releases:
             - pipeline-stage-view:2.19
             - credentials-binding:1.24
             - font-awesome-api:5.15.1-1
-            - git:4.5.0
+            - git:4.5.1
             - gitlab-oauth:1.10
             - gitlab-plugin:1.5.13
             - matrix-auth:2.6.4
