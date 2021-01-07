@@ -48,7 +48,7 @@ releases:
           jenkinsUrl: "https://{{$jenkinsHostName}}"
           jenkinsAdminEmail: {{$jenkinsAdminEmail | quote}}
           installPlugins:
-            - kubernetes:1.25.7
+            - kubernetes:1.27.7
             - ace-editor:1.1
             - workflow-job:2.40
             - workflow-aggregator:2.6
@@ -61,6 +61,7 @@ releases:
             - gitlab-plugin:1.5.13
             - matrix-auth:2.6.4
             - configuration-as-code:1.46
+            - blueocean:1.24.3
           additionalPlugins:
             - antisamy-markup-formatter:2.1
           initializeOnce: true
