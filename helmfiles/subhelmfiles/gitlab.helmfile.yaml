@@ -63,6 +63,8 @@ releases:
             enableImpersonation: true
             defaultCanCreateGroup: false
             usernameChangingEnabled: false
+            initialDefaults:
+              signupEnabled: false
             defaultProjectsFeatures:
               issues: true
               mergeRequests: true
