@@ -57,7 +57,7 @@ releases:
             - gitlab-oauth:1.10
             - gitlab-plugin:1.5.13
             - matrix-auth:2.6.4
-            - configuration-as-code:1.46
+            - configuration-as-code:1.47
             - blueocean:1.24.3
           additionalPlugins:
             - antisamy-markup-formatter:2.1
