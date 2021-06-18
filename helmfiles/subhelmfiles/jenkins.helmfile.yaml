@@ -91,7 +91,7 @@ releases:
             - cloudbees-bitbucket-branch-source:2.9.7
             - cloudbees-folder:6.15
             - command-launcher:1.2
-            - credentials:2.3.17
+            - credentials:2.5.0
             - display-url-api:2.3.4
             - durable-task:1.35
             - echarts-api:5.0.2-1
