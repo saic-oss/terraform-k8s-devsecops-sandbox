@@ -48,7 +48,7 @@ releases:
           jenkinsUrl: "https://{{$jenkinsHostName}}"
           jenkinsAdminEmail: {{$jenkinsAdminEmail | quote}}
           installPlugins:
-            - kubernetes:1.27.7
+            - kubernetes:1.30.0
             - workflow-job:2.40
             - workflow-aggregator:2.6
             - workflow-cps-global-lib:2.18
@@ -106,7 +106,7 @@ releases:
             - handlebars:3.0.8
             - handy-uri-templates-2-api:2.1.8-1.0
             - htmlpublisher:1.25
-            - jackson2-api:2.12.2
+            - jackson2-api:2.12.3
             - jdk-tool:1.0
             - jenkins-design-language:1.24.6
             - jira:3.2.1
@@ -114,7 +114,7 @@ releases:
             - jquery3-api:3.6.0-1
             - jsch:0.1.55.2
             - junit:1.49
-            - kubernetes-client-api:4.13.2-1
+            - kubernetes-client-api:5.4.1
             - kubernetes-credentials:0.8.0
             - lockable-resources:2.10
             - mailer:1.34
