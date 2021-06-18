@@ -140,7 +140,7 @@ releases:
             - snakeyaml-api:1.27.0
             - sse-gateway:1.24
             - ssh-credentials:1.18.1
-            - structs:1.22
+            - structs:1.23
             - token-macro:2.13
             - trilead-api:1.0.13
             - variant:1.4
