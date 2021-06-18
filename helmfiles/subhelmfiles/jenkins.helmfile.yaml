@@ -144,7 +144,7 @@ releases:
             - token-macro:2.13
             - trilead-api:1.0.13
             - variant:1.4
-            - workflow-api:2.42
+            - workflow-api:2.45
             - workflow-basic-steps:2.22
             - workflow-cps:2.90
             - workflow-durable-task-step:2.38
