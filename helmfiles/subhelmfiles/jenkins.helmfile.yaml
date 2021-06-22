@@ -221,7 +221,7 @@ releases:
               cert-manager.io/cluster-issuer: {{$clusterIssuer | quote}}
               kubernetes.io/ingress.class: "nginx"
               kubernetes.io/ingress.provider: "nginx"
-              ingressClassName: "nginx"
+            ingressClassName: "nginx"
             hostName: {{$jenkinsHostName | quote}}
             tls:
               - secretName: "tls-{{$jenkinsHostName}}"
