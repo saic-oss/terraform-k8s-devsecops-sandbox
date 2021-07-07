@@ -24,15 +24,15 @@ releases:
       namespace: "jenkins"
       vendor: "jenkins"
     chart: "jenkins/jenkins"
-    version: "2.17.1"
+    version: "3.3.23"
     wait: true
     atomic: true
     cleanupOnFail: true
     timeout: 1200
     values:
-      - master:
+      - controller:
           image: "jenkins/jenkins"
-          tag: "2.249.3-lts-centos7"
+          tag: "2.289.1-jdk11"
           imagePullPolicy: "IfNotPresent"
           admin:
             existingSecret: {{$initialAdminCredsSecretName | quote}}
@@ -46,7 +46,6 @@ releases:
               cpu: "2"
               memory: "4Gi"
           jenkinsUrl: "https://{{$jenkinsHostName}}"
-          jenkinsAdminEmail: {{$jenkinsAdminEmail | quote}}
           installPlugins:
             - kubernetes:1.27.7
             - workflow-job:2.40
@@ -152,6 +151,7 @@ releases:
             - workflow-scm-step:2.12
             - workflow-step-api:2.23
             - workflow-support:3.8
+          installLatestPlugins: false
           initializeOnce: true
           overwritePlugins: true
           enableRawHtmlMarkupFormatter: true
@@ -160,7 +160,6 @@ releases:
 #            - "new java.lang.String byte[]"
 #            - "staticMethod java.util.Base64 getDecoder"
           JCasC:
-            enabled: true
             defaultConfig: true
             configScripts:
               welcome-message: |
@@ -222,12 +221,16 @@ releases:
               cert-manager.io/cluster-issuer: {{$clusterIssuer | quote}}
               kubernetes.io/ingress.class: "nginx"
               kubernetes.io/ingress.provider: "nginx"
+            ingressClassName: "nginx"
             hostName: {{$jenkinsHostName | quote}}
             tls:
               - secretName: "tls-{{$jenkinsHostName}}"
                 hosts:
                   - {{$jenkinsHostName | quote}}
-          healthProbeLivenessInitialDelay: 180
+          healthProbes: true
+          probes:
+            livenessProbe:
+              initialDelaySeconds: 180
         persistence:
           enabled: true
           storageClass: efs
